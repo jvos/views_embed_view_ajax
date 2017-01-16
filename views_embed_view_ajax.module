@@ -1,0 +1,44 @@
+<?php
+/**
+* Implements hook_menu().
+*/
+function views_embed_view_ajax_menu() {
+  $items['views_embed_view_ajax/%/%/%'] = array(
+    'page callback' => 'views_embed_view_ajax_get_ajax', // Render HTML.
+    'page arguments' => array(1,2,3),
+    'type' => MENU_CALLBACK,
+    'access arguments' => array('access content'),
+    'delivery callback' => 'views_embed_view_ajax_ajax_callback',  // Magic goes here.
+  );
+  return $items;
+}
+
+function views_embed_view_ajax_get_ajax($nid, $name, $display) {    
+  // load our view and pass it
+  $view = views_get_view($name);
+  $view->init();
+
+  // you can change this to be the name of the display you want
+  // to use
+  $view->set_display($display);
+  $view->set_arguments(array($nid));
+  $content = $view->render();
+      
+  return $content;
+}
+
+function views_embed_view_ajax_ajax_callback($page_callback_result) {
+  // Only render content
+  //$content = drupal_render($page_callback_result);
+  $content = $page_callback_result;
+  
+  // Add CSS and JS files, add some markup
+  //$html = '<html><head><title></title>' . drupal_get_css() . drupal_get_js() . '</head><body class="jquery-ajax-load">' . $content . '</body></html>';
+  
+  // with drupal_get_js() the page redirect after the ajax load
+  $html = '<html><head><title></title>' . drupal_get_css() . '</head><body class="jquery-ajax-load">' . $content . '</body></html>';
+  print $html;
+
+  // Perform end-of-request tasks.
+  drupal_page_footer();
+}

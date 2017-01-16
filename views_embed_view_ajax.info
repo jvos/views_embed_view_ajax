@@ -1,0 +1,8 @@
+name = Views Embed View Ajax
+description = Custom module, render the views embed view with ajax.
+core = 7.x
+package = Custom
+
+dependencies[] = views
+
+scripts[] = views_embed_view_ajax.js 
